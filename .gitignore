@@ -1,0 +1,84 @@
+# ============================================================
+#  .gitignore - Infraestructura PBL6
+# ============================================================
+
+# ──────────────────────────────────────────────────────────
+# TERRAFORM / OPENTOFU — archivos sensibles y generados
+# ──────────────────────────────────────────────────────────
+
+# Variables con credenciales (¡NUNCA subir al repo!)
+*.tfvars
+*.tfvars.json
+
+# Estado de Terraform/OpenTofu (puede contener secrets en texto plano)
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+crash.log
+crash.*.log
+
+# Directorio de providers descargados (binarios pesados)
+.terraform/
+**/.terraform/
+
+# Lock file (opcional: algunos equipos sí lo versionan; decide tú)
+# .terraform.lock.hcl
+
+# Archivos de override (uso local)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ──────────────────────────────────────────────────────────
+# CLAVES SSH Y CERTIFICADOS
+# ──────────────────────────────────────────────────────────
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# ──────────────────────────────────────────────────────────
+# ENTORNOS Y CONFIGURACIÓN LOCAL
+# ──────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.local
+
+# ──────────────────────────────────────────────────────────
+# SISTEMA OPERATIVO
+# ──────────────────────────────────────────────────────────
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ──────────────────────────────────────────────────────────
+# EDITORES / IDEs
+# ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# ──────────────────────────────────────────────────────────
+# LOGS Y TEMPORALES
+# ──────────────────────────────────────────────────────────
+*.log
+tmp/
+temp/

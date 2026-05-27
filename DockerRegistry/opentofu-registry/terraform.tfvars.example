@@ -1,0 +1,62 @@
+# ┌──────────────────────────────────────────────────────────────────────┐
+# │  terraform.tfvars.example                                           │
+# │                                                                      │
+# │  Copia este archivo como "terraform.tfvars" y rellena los valores   │
+# │  con los de tu entorno. NUNCA subas terraform.tfvars al repositorio │
+# └──────────────────────────────────────────────────────────────────────┘
+#
+#  Uso:
+#    cp terraform.tfvars.example terraform.tfvars
+#    # Edita terraform.tfvars con tus credenciales reales
+
+# === CONEXIÓN A PROXMOX ===
+# URL de la API de Proxmox (sustituye la IP por la de tu servidor)
+proxmox_api_url = "https://<IP_PROXMOX>:8006/api2/json"
+
+# Token de autenticación: formato <usuario>@<realm>!<nombre-token>
+proxmox_api_token_id = "<usuario>@pam!<nombre-token>"
+
+# Secreto del token (se genera al crear el token en Proxmox)
+proxmox_api_token_secret = "<uuid-del-secreto>"
+
+# Nombre del nodo Proxmox donde se crearán los recursos
+proxmox_node = "<nombre-nodo-proxmox>"
+
+# === CONTENEDOR LXC ===
+# Nombre hostname del contenedor
+lxc_hostname = "docker-registry"
+
+# Plantilla OS a usar (debe existir en el almacenamiento del nodo)
+lxc_ostemplate = "local:vztmpl/<plantilla>.tar.zst"
+
+# Contraseña root del contenedor (usa una contraseña segura)
+lxc_password = "<contraseña-segura>"
+
+# Almacenamiento donde se creará el disco del contenedor
+lxc_storage = "local-lvm"
+
+# Tamaño del disco (ejemplos: "10G", "20G", "50G")
+lxc_disk_size = "20G"
+
+# Número de núcleos de CPU asignados
+lxc_cores = 2
+
+# Memoria RAM en MB
+lxc_memory = 2048
+
+# === RED ===
+# Bridge de red del host Proxmox
+lxc_bridge = "vmbr0"
+
+# IP estática del contenedor con máscara de subred (CIDR)
+lxc_ip = "10.10.1.XX/24"
+
+# Puerta de enlace predeterminada
+lxc_gateway = "10.10.1.1"
+
+# === SSH ===
+# Ruta a tu clave pública SSH (se instalará en el contenedor)
+ssh_public_key_path = "~/.ssh/id_rsa.pub"
+
+# Ruta a tu clave privada SSH (para conexiones desde Terraform/OpenTofu)
+ssh_private_key_path = "~/.ssh/id_rsa"
