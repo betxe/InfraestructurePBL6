@@ -1,0 +1,43 @@
+# ┌──────────────────────────────────────────────────────────────────────────┐
+# │  terraform.tfvars.example — Colector LXC                               │
+# │                                                                          │
+# │  Copia como "terraform.tfvars" y rellena con tus valores reales.        │
+# │  NUNCA subas terraform.tfvars al repositorio.                           │
+# └──────────────────────────────────────────────────────────────────────────┘
+#
+#  Uso:
+#    cp terraform.tfvars.example terraform.tfvars
+#    # Edita terraform.tfvars con tus credenciales reales
+#    tofu init && tofu apply
+
+# === CONEXIÓN A PROXMOX ===
+proxmox_api_url          = "https://<IP_PROXMOX>:8006/api2/json"
+proxmox_api_token_id     = "<usuario>@pam!<nombre-token>"
+proxmox_api_token_secret = "<uuid-secreto>"
+proxmox_node             = "<nombre-nodo>"
+
+# === LXC ===
+lxc_ostemplate = "local:vztmpl/<plantilla-debian>.tar.zst"
+lxc_password   = "<contraseña-segura>"
+lxc_storage    = "local-lvm"
+lxc_disk_size  = "15G"
+lxc_cores      = 2
+lxc_memory     = 1024
+
+# === RED ===
+lxc_bridge  = "vmbr0"
+lxc_ip      = "10.10.1.51"    # IP fija del Colector
+lxc_gateway = "10.10.1.1"
+
+# === SSH ===
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
+
+# === SERVICIOS INTERNOS ===
+docker_registry_ip = "10.10.1.50"   # IP del Docker Registry privado
+kafka_ip           = "10.10.1.52"   # IP del broker Kafka
+
+# === CLOUDFLARE TUNNEL ===
+# Obtén este valor del output del módulo CloudFlare/:
+#   cd ../../CloudFlare && tofu output -raw tunnel_token
+cloudflare_tunnel_token = "<token-del-tunnel-cloudflare>"

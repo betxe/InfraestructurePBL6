@@ -1,0 +1,10 @@
+# ── Directorios que no necesita Docker en el contexto de build ──
+target/
+.git/
+.idea/
+.vscode/
+*.md
+
+# ── Archivos de test y configuración local ──
+src/test/
+*.log

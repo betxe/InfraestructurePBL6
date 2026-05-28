@@ -1,0 +1,45 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: webhardmon-colector
+
+  # ── Kafka Producer ─────────────────────────────────────────────────────
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:10.10.1.52:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # Garantiza durabilidad: el líder y todas las réplicas in-sync deben confirmar
+      acks: all
+      # Reintenta hasta 3 veces si hay un error transitorio de red
+      retries: 3
+      properties:
+        # Tiempo máximo esperando a que el broker confirme (ms)
+        delivery.timeout.ms: 30000
+        # Habilita idempotencia para evitar duplicados en reintentos
+        enable.idempotence: true
+
+# ── Actuator — health check para Cloudflare Tunnel ─────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+# ── Configuración propia de WebHardMon ─────────────────────────────────
+webhardmon:
+  kafka:
+    topic: ${KAFKA_TOPIC:raw-telemetry}
+
+# ── Logging ────────────────────────────────────────────────────────────
+logging:
+  level:
+    com.webhardmon: INFO
+    org.springframework.kafka: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

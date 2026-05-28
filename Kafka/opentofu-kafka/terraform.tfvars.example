@@ -1,0 +1,35 @@
+# ┌──────────────────────────────────────────────────────────────────────────┐
+# │  terraform.tfvars.example — Kafka LXC                                  │
+# │                                                                          │
+# │  Copia como "terraform.tfvars" y rellena con tus valores reales.        │
+# │  NUNCA subas terraform.tfvars al repositorio.                           │
+# └──────────────────────────────────────────────────────────────────────────┘
+#
+#  Uso:
+#    cp terraform.tfvars.example terraform.tfvars
+#    # Edita terraform.tfvars con tus credenciales reales
+#    tofu init && tofu apply
+
+# === CONEXIÓN A PROXMOX ===
+proxmox_api_url          = "https://<IP_PROXMOX>:8006/api2/json"
+proxmox_api_token_id     = "<usuario>@pam!<nombre-token>"
+proxmox_api_token_secret = "<uuid-secreto>"
+proxmox_node             = "<nombre-nodo>"
+
+# === LXC ===
+# IMPORTANTE: Kafka necesita al menos 2GB de RAM y 30GB de disco
+lxc_ostemplate = "local:vztmpl/<plantilla-debian>.tar.zst"
+lxc_password   = "<contraseña-segura>"
+lxc_storage    = "local-lvm"
+lxc_disk_size  = "30G"
+lxc_cores      = 2
+lxc_memory     = 2048
+
+# === RED ===
+lxc_bridge  = "vmbr0"
+lxc_ip      = "10.10.1.52"    # IP fija de Kafka
+lxc_gateway = "10.10.1.1"
+
+# === SSH ===
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
