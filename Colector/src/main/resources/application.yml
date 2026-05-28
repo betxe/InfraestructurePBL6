@@ -9,16 +9,16 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:10.10.1.52:9092}
     producer:
+      # Clave: String (agent_id) | Valor: byte[] (Avro binario — pass-through)
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-      # Garantiza durabilidad: el líder y todas las réplicas in-sync deben confirmar
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      # Durabilidad: líder + réplicas in-sync deben confirmar
       acks: all
-      # Reintenta hasta 3 veces si hay un error transitorio de red
+      # Reintentos ante errores transitorios de red
       retries: 3
       properties:
-        # Tiempo máximo esperando a que el broker confirme (ms)
         delivery.timeout.ms: 30000
-        # Habilita idempotencia para evitar duplicados en reintentos
+        # Idempotencia: evita duplicados en caso de reintento
         enable.idempotence: true
 
 # ── Actuator — health check para Cloudflare Tunnel ─────────────────────
