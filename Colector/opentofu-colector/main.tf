@@ -106,21 +106,25 @@ resource "proxmox_lxc" "colector" {
       "  -e KAFKA_TOPIC=raw-telemetry \\",
       "  ${var.docker_registry_ip}:5000/colector:latest",
 
-      # ── 5. Instalar y arrancar cloudflared (Tunnel daemon) ──────────────
+      # ── 5. Instalar cloudflared (Tunnel daemon) ─────────────────────────
+      # NOTA: cloudflared requiere puerto 7844 saliente (TCP+UDP).
+      # Si la red lo bloquea, los comandos de 'systemctl start' fallarán.
+      # Usamos '|| true' para que el provisioner no se rompa por este motivo.
+      # El Colector seguirá funcionando internamente en :8080.
       "echo '=== Instalando cloudflared ==='",
       "curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | gpg --dearmor -o /usr/share/keyrings/cloudflare-main.gpg",
       "echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main' > /etc/apt/sources.list.d/cloudflared.list",
       "apt-get update -qq",
       "apt-get install -y -qq cloudflared",
-
-      # Instalar el tunnel como servicio systemd con el token generado por OpenTofu (CloudFlare/)
-      "cloudflared service install ${var.cloudflare_tunnel_token}",
-      "systemctl enable cloudflared",
-      "systemctl start cloudflared",
+      "cloudflared service install ${var.cloudflare_tunnel_token} || echo '[WARN] cloudflared service install failed'",
+      "systemctl enable cloudflared || true",
+      # '|| true' evita que el provisioner falle si cloudflared no puede conectar
+      # (puerto 7844 bloqueado). El error aparecerá en los logs del LXC.
+      "systemctl start cloudflared || echo '[WARN] cloudflared no pudo arrancar - verifica que el puerto 7844 TCP/UDP saliente este abierto en el router'",
 
       "echo '=== Colector desplegado correctamente ==='",
       "docker ps",
-      "systemctl status cloudflared --no-pager"
+      "systemctl is-active cloudflared && echo '[OK] cloudflared activo' || echo '[WARN] cloudflared inactivo - tunnel externo no disponible'"
     ]
   }
 }
