@@ -1,0 +1,35 @@
+# ┌──────────────────────────────────────────────────────────────────────────┐
+# │  terraform.tfvars.example — Módulo CloudFlare                          │
+# │                                                                          │
+# │  Copia como "terraform.tfvars" y rellena con tus valores reales.        │
+# │  NUNCA subas terraform.tfvars al repositorio.                           │
+# └──────────────────────────────────────────────────────────────────────────┘
+#
+#  Uso:
+#    cp terraform.tfvars.example terraform.tfvars
+#    # Edita terraform.tfvars con tus credenciales reales
+#    tofu init && tofu apply
+#
+#  Dónde encontrar cada valor:
+#    cloudflare_api_token  → dash.cloudflare.com/profile/api-tokens
+#    cloudflare_account_id → dash.cloudflare.com → barra lateral derecha de tu dominio
+#    cloudflare_zone_id    → dash.cloudflare.com → tu dominio → Overview → Zone ID
+#
+#  Permisos requeridos para el API Token:
+#    - Account / Cloudflare Tunnel / Edit
+#    - Zone / DNS / Edit
+#    - Account / Workers Scripts / Edit
+
+# === CREDENCIALES CLOUDFLARE ===
+cloudflare_api_token  = "<tu-api-token>"
+cloudflare_account_id = "<tu-account-id>"
+cloudflare_zone_id    = "<tu-zone-id>"
+
+# === DOMINIO ===
+# El dominio base que gestionas en Cloudflare
+# El tunnel se expondrá en: collector.<domain_name>
+domain_name = "<tudominio.com>"
+
+# === GCP CLOUD RUN ===
+# URL de tu instancia Cloud Run (Web Host) — puede ser placeholder si aún no está desplegado
+cloud_run_backend_url = "<xxxxx>.run.app"
