@@ -117,10 +117,12 @@ resource "proxmox_lxc" "colector" {
       "apt-get update -qq",
       "apt-get install -y -qq cloudflared",
       "cloudflared service install ${var.cloudflare_tunnel_token} || echo '[WARN] cloudflared service install failed'",
+      "echo '=== Parcheando servicio cloudflared para usar HTTP/2 en puerto 443 ==='",
+      "sed -i 's/tunnel run/tunnel run --protocol http2/g' /etc/systemd/system/cloudflared.service || echo '[WARN] No se pudo parchear el archivo de servicio de cloudflared'",
+      "systemctl daemon-reload || true",
       "systemctl enable cloudflared || true",
-      # '|| true' evita que el provisioner falle si cloudflared no puede conectar
-      # (puerto 7844 bloqueado). El error aparecerá en los logs del LXC.
-      "systemctl start cloudflared || echo '[WARN] cloudflared no pudo arrancar - verifica que el puerto 7844 TCP/UDP saliente este abierto en el router'",
+      # Se intenta levantar usando el puerto 443 TCP (HTTPS estándar) que suele estar abierto
+      "systemctl start cloudflared || echo '[WARN] cloudflared no pudo arrancar'",
 
       "echo '=== Colector desplegado correctamente ==='",
       "docker ps",

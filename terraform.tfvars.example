@@ -1,0 +1,75 @@
+# ┌──────────────────────────────────────────────────────────────────────────┐
+# │  terraform.tfvars.example — Módulo raíz (despliegue completo)           │
+# │                                                                          │
+# │  Copia como "terraform.tfvars" y rellena con tus valores reales.        │
+# │  NUNCA subas terraform.tfvars al repositorio.                           │
+# │                                                                          │
+# │  Uso:                                                                    │
+# │    cp terraform.tfvars.example terraform.tfvars                         │
+# │    tofu init && tofu apply                                               │
+# │                                                                          │
+# │  Este módulo despliega en un solo 'tofu apply':                         │
+# │    1. Cloudflare Tunnel + DNS + Worker                                  │
+# │    2. LXC Colector en Proxmox con cloudflared ya configurado            │
+# │       (el token del túnel se inyecta automáticamente)                   │
+# └──────────────────────────────────────────────────────────────────────────┘
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CLOUDFLARE
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+#  Dónde obtener cada valor:
+#    cloudflare_api_token  → dash.cloudflare.com/profile/api-tokens
+#    cloudflare_account_id → dash.cloudflare.com → barra lateral derecha
+#    cloudflare_zone_id    → dash.cloudflare.com → tu dominio → Overview → Zone ID
+#
+#  Permisos requeridos para el API Token:
+#    - Account / Cloudflare Tunnel / Edit
+#    - Zone / DNS / Edit
+#    - Account / Workers Scripts / Edit
+
+cloudflare_api_token  = "<tu-api-token>"
+cloudflare_account_id = "<tu-account-id>"
+cloudflare_zone_id    = "<tu-zone-id>"
+
+# Dominio base. El túnel se expondrá en collector.<domain_name>
+domain_name = "<tudominio.com>"
+
+# Hostname de Cloud Run (solo el host, sin https://)
+# Ej: "mi-servicio-abc123-ew.a.run.app"
+cloud_run_backend_url = "<xxxxx>.run.app"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROXMOX
+# ═══════════════════════════════════════════════════════════════════════════════
+proxmox_api_url          = "https://10.10.1.10:8006/api2/json"
+proxmox_api_token_id     = "root@pam!opentofu"
+proxmox_api_token_secret = "<tu-secreto-proxmox>"
+proxmox_node             = "pve"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# LXC COLECTOR
+# ═══════════════════════════════════════════════════════════════════════════════
+lxc_ostemplate = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
+lxc_password   = "<contraseña-root-lxc>"
+
+# Valores por defecto — ajusta si tu entorno difiere
+# lxc_ip       = "10.10.1.51"
+# lxc_gateway  = "10.10.1.1"
+# lxc_bridge   = "vmbr0"
+# lxc_storage  = "local-lvm"
+# lxc_disk_size = "15G"
+# lxc_cores    = 2
+# lxc_memory   = 1024
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SSH (para los provisioners)
+# ═══════════════════════════════════════════════════════════════════════════════
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SERVICIOS INTERNOS (valores por defecto según el resto de módulos)
+# ═══════════════════════════════════════════════════════════════════════════════
+# docker_registry_ip = "10.10.1.50"
+# kafka_ip           = "10.10.1.52"
